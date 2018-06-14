@@ -17,41 +17,17 @@ const readline = require('readline-sync');
         numbers_length = +readline.prompt();
     }
     let i = 0;
+    let numbers = [];
     do {
         console.log("Enter number " + (i + 1));
-        const number = +readline.prompt();
-        if (i == 0) {
-            answer = number;
-        } else {
-            answer = do_operation(operator, answer, number);
-        }
+        numbers[i] = +readline.prompt();
     } while (++i < numbers_length);
 
+    answer = numbers.reduce(function(first, second) {return eval(first + operator + 
+        second)});
     console.log("The answer is: " + answer);
 
 })();
-
-function do_operation(operator, answer, number) {
-    switch (operator) {
-        case "+":
-            answer = answer + number;
-            break;
-        case "*":
-            answer = answer * number;
-            break;
-        case "-":
-            answer = answer - number;
-            break;
-        case "/":
-            answer = answer / number;
-            break;
-        default:
-            answer = "Not a valid operator";
-            break;
-
-    }
-    return answer;
-}
 
 function is_valid_operator(operator) {
     if (operator !== "+" && operator !== "*" && operator !== "-" && operator !== "/") {
