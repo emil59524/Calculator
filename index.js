@@ -82,23 +82,30 @@ function getNumbersPrompt(numbersLength) {
     return numbers;
 }
 
+function getNumbersLength(operatorPrompt) {
+    "use strict";
+    let numbersLength = getNumberPrompt("Enter how many numbers do you want to " +
+        operatorPrompt + "?", "Enter a number: ");
+    while (numbersLength < 2) {
+        console.log("You must enter at least 2");
+        numbersLength = getNumberPrompt("Enter how many numbers do you want to "
+            + operatorPrompt + "?", "Enter a number: ");
+    }
+
+    return numbersLength;
+}
+
 (function() {
     "use strict";
     console.log("Welcome to the calculator:\n===============")
     while (true) {
         operator = getOperatorPrompt("Enter operator: ", "Enter a valid operator (+, *, -, /)");
 
-        let numbersLength = getNumberPrompt("Enter how many numbers do you want to " + operator
-            + "?", "Enter a number: ");
-        while (numbersLength < 2) {
-            console.log("You must enter at least 2");
-            numbersLength = getNumberPrompt("Enter how many numbers do you want to "
-                + operator + "?", "Enter a number: ");
-        }
+        let numbersLength = getNumbersLength(operator);
 
-        let numbers = getNumbersPrompt(numbersLength);
+        let numbersArray = getNumbersPrompt(numbersLength);
 
-        let answer = repeatOperation(operator, numbers);
+        let answer = repeatOperation(operator, numbersArray);
 
         console.log("The answer is: " + answer);
     }
