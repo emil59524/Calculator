@@ -1,56 +1,51 @@
 const readline = require('readline-sync');
-(function() {
-    "use strict";
-    console.log("Welcome to the calculator:\n===============")
-    console.log("Enter the operator:");
-    let operator = readline.prompt();
-    let valid_operators = ["*", "+", "-", "/"];
+
+function get_number_prompt(prompt_message, error_message) {
+    if (error_message == undefined) {
+        error_message = "Invalid entry: ";
+    }
+    console.log(prompt_message);
+    number = +readline.prompt();
+    while (isNaN(number)) {
+        console.log(error_message + ": " + prompt_message);
+        number = +readline.prompt();
+    }
+    return number;
+}
+
+function get_operator_prompt(prompt_message, error_message) {
+    if (error_message == undefined) {
+        error_message = "Invalid entry: ";
+    }
+    console.log(prompt_message);
+    operator = readline.prompt();
     while (!is_valid_operator(operator)) {
-        console.log("Enter a valid operator(+, *, -, /): ");
+        console.log(error_message + ": " + prompt_message);
         operator = readline.prompt();
     }
-    let answer = 0;
-    console.log ("Enter how many numbers do you want to " + operator + "?");
-    let numbers_length = +readline.prompt();
-    while (numbers_length < 2) {
-        console.log("You must enter at least 2 numbers");
-        numbers_length = +readline.prompt();
-    }
-    let i = 0;
-    do {
-        console.log("Enter number " + (i + 1));
-        const number = +readline.prompt();
-        if (i == 0) {
-            answer = number;
-        } else {
-            answer = do_operation(operator, answer, number);
-        }
-    } while (++i < numbers_length);
+    return operator;
+}
 
-    console.log("The answer is: " + answer);
-
-})();
-
-function do_operation(operator, answer, number) {
+function do_operation(operator, first_operand, second_operand) {
     switch (operator) {
         case "+":
-            answer = answer + number;
+            first_operand = first_operand + second_operand;
             break;
         case "*":
-            answer = answer * number;
+            first_operand = first_operand * second_operand;
             break;
         case "-":
-            answer = answer - number;
+            first_operand = first_operand - second_operand;
             break;
         case "/":
-            answer = answer / number;
+            first_operand = first_operand / second_operand;
             break;
         default:
-            answer = "Not a valid operator";
+            first_operand = "Not a valid operator";
             break;
 
     }
-    return answer;
+    return first_operand;
 }
 
 function is_valid_operator(operator) {
@@ -59,3 +54,32 @@ function is_valid_operator(operator) {
     }
     return true;
 }
+
+(function() {
+    "use strict";
+    console.log("Welcome to the calculator:\n===============")
+    while (true) {
+        operator = get_operator_prompt("Enter operator: ", "Enter a valid operator (+, *, -, /)");
+        let answer = 0;
+        let numbers_length = get_number_prompt("Enter how many numbers do you want to " + operator
+            + "?", "Enter a number: ");
+        while (numbers_length < 2) {
+            console.log("You must enter at least 2");
+            numbers_length = get_number_prompt("Enter how many numbers do you want to "
+                + operator + "?", "Enter a number: ");
+        }
+        let i = -1;
+
+        while (++i < numbers_length) {
+            const number = get_number_prompt("Enter number " + (i + 1),
+                "Enter a valid number: ");
+            if (i == 0) {
+                answer = number;
+            } else {
+                answer = do_operation(operator, answer, number);
+            }
+        }
+
+        console.log("The answer is: " + answer);
+    }
+})();
