@@ -1,6 +1,6 @@
 const readline = require('readline-sync');
 
-function getNumberPrompt(promptMessage, errorMessage) {
+function getNumberWithPrompt(promptMessage, errorMessage) {
     if (errorMessage == undefined) {
         errorMessage = "Invalid entry: ";
     }
@@ -15,7 +15,7 @@ function getNumberPrompt(promptMessage, errorMessage) {
     return number;
 }
 
-function getOperatorPrompt(promptMessage, errorMessage) {
+function getOperatorWithPrompt(promptMessage, errorMessage) {
     if (errorMessage == undefined) {
         errorMessage = "Invalid entry: ";
     }
@@ -70,12 +70,12 @@ function isValidOperator(operator) {
     return true;
 }
 
-function getNumbersPrompt(numbersLength) {
+function getNumbersWithPrompt(numbersLength) {
     "use strict";
     let i = -1;
     let numbers = [];
     while (++i < numbersLength) {
-        const number = getNumberPrompt("Enter number " + (i + 1),
+        const number = getNumberWithPrompt("Enter number " + (i + 1),
             "Enter a valid number: ");
         numbers[i] = number;
     }
@@ -84,11 +84,11 @@ function getNumbersPrompt(numbersLength) {
 
 function getNumbersLength(operatorPrompt) {
     "use strict";
-    let numbersLength = getNumberPrompt("Enter how many numbers do you want to " +
+    let numbersLength = getNumberWithPrompt("Enter how many numbers do you want to " +
         operatorPrompt + "?", "Enter a number: ");
     while (numbersLength < 2) {
         console.log("You must enter at least 2");
-        numbersLength = getNumberPrompt("Enter how many numbers do you want to "
+        numbersLength = getNumberWithPrompt("Enter how many numbers do you want to "
             + operatorPrompt + "?", "Enter a number: ");
     }
 
@@ -99,11 +99,11 @@ function getNumbersLength(operatorPrompt) {
     "use strict";
     console.log("Welcome to the calculator:\n===============")
     while (true) {
-        operator = getOperatorPrompt("Enter operator: ", "Enter a valid operator (+, *, -, /)");
+        operator = getOperatorWithPrompt("Enter operator: ", "Enter a valid operator (+, *, -, /)");
 
         let numbersLength = getNumbersLength(operator);
 
-        let numbersArray = getNumbersPrompt(numbersLength);
+        let numbersArray = getNumbersWithPrompt(numbersLength);
 
         let answer = repeatOperation(operator, numbersArray);
 
