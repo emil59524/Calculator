@@ -5,10 +5,12 @@ function get_number_prompt(prompt_message, error_message) {
         error_message = "Invalid entry: ";
     }
     console.log(prompt_message);
-    number = +readline.prompt();
-    while (isNaN(number)) {
+    numberString = readline.prompt();
+    number = +numberString;
+    while (numberString == "" || isNaN(number)) {
         console.log(error_message + ": " + prompt_message);
-        number = +readline.prompt();
+        numberString = readline.prompt();
+        number = +numberString;
     }
     return number;
 }
@@ -48,6 +50,19 @@ function do_operation(operator, first_operand, second_operand) {
     return first_operand;
 }
 
+function repeat_operation(operator, numbers) {
+    "use strict";
+    if (numbers.length < 2) {
+        throw "repeat_operation must receive an array with the length >= 2";
+    }
+    let answer = numbers[0];
+    let i = 0;
+    while (++i < numbers.length) {
+        answer = do_operation(operator, answer, numbers[i]);
+    }
+    return answer;
+}
+
 function is_valid_operator(operator) {
     if (operator !== "+" && operator !== "*" && operator !== "-" && operator !== "/") {
         return false;
@@ -55,12 +70,24 @@ function is_valid_operator(operator) {
     return true;
 }
 
+function get_numbers_prompt(numbers_length) {
+    "use strict";
+    let i = -1;
+    let numbers = [];
+    while (++i < numbers_length) {
+        const number = get_number_prompt("Enter number " + (i + 1),
+            "Enter a valid number: ");
+        numbers[i] = number;
+    }
+    return numbers;
+}
+
 (function() {
     "use strict";
     console.log("Welcome to the calculator:\n===============")
     while (true) {
         operator = get_operator_prompt("Enter operator: ", "Enter a valid operator (+, *, -, /)");
-        let answer = 0;
+
         let numbers_length = get_number_prompt("Enter how many numbers do you want to " + operator
             + "?", "Enter a number: ");
         while (numbers_length < 2) {
@@ -68,17 +95,10 @@ function is_valid_operator(operator) {
             numbers_length = get_number_prompt("Enter how many numbers do you want to "
                 + operator + "?", "Enter a number: ");
         }
-        let i = -1;
 
-        while (++i < numbers_length) {
-            const number = get_number_prompt("Enter number " + (i + 1),
-                "Enter a valid number: ");
-            if (i == 0) {
-                answer = number;
-            } else {
-                answer = do_operation(operator, answer, number);
-            }
-        }
+        let numbers = get_numbers_prompt(numbers_length);
+
+        let answer = repeat_operation(operator, numbers);
 
         console.log("The answer is: " + answer);
     }
